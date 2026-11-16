@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>CART3R LIFE OS</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:#eee;font-family:Arial,sans-serif}
+header{padding:24px 20px;border-bottom:1px solid #292929}
+h1{color:#ff263f;font-size:23px;letter-spacing:3px;margin:0}
+header p{color:#777;font-size:11px;letter-spacing:2px}
+nav{display:flex;overflow-x:auto;border-bottom:1px solid #292929}
+nav button{background:none;border:0;color:#888;padding:17px 15px;white-space:nowrap}
+nav button.active{color:#ff263f;border-bottom:2px solid #ff263f}
+main{padding:20px}
+h2{font-size:20px}
+.panel{background:#111;border:1px solid #292929;border-radius:12px;padding:17px;margin:15px 0}
+.panel h3{color:#ff263f;margin-top:0}
+.stat{font-size:25px;font-weight:bold}
+small{color:#777}
+input,textarea{width:100%;background:#080808;border:1px solid #333;color:white;padding:13px;border-radius:7px;margin:7px 0}
+.action{background:#ff263f;color:white;border:0;padding:13px 18px;border-radius:7px;font-weight:bold}
+.item{padding:12px 0;border-bottom:1px solid #292929}
+</style>
+</head>
+<body>
+<header>
+<h1>CART3R LIFE OS</h1>
+<p>PERSONAL COMMAND CENTER</p>
+</header>
+<nav id="nav">
+<button class="active" onclick="show('home',this)">HOME</button>
+<button onclick="show('schedule',this)">SCHEDULE</button>
+<button onclick="show('school',this)">SCHOOL</button>
+<button onclick="show('work',this)">WORK</button>
+<button onclick="show('projects',this)">PROJECTS</button>
+<button onclick="show('ai',this)">AI</button>
+</nav>
+<main id="content"></main>
+<script>
+const sections={
+home:`<h2>COMMAND CENTER</h2>
+<div class="panel"><small>SYSTEM STATUS</small><h3>ALL SYSTEMS READY</h3></div>
+<div class="panel"><small>YOUR PERSONAL ORGANISER</small><p>Manage your schedule, school, work and projects.</p></div>`,
+schedule:`<h2>SCHEDULE</h2><div class="panel"><h3>Add schedule item</h3><input id="entry" placeholder="Event name"><input id="date" type="datetime-local"><button class="action" onclick="add('schedule')">ADD EVENT</button></div><div id="list"></div>`,
+school:`<h2>SCHOOL</h2><div class="panel"><h3>School organiser</h3><input id="entry" placeholder="Assignment or task"><button class="action" onclick="add('school')">ADD TASK</button></div><div id="list"></div>`,
+work:`<h2>WORK</h2><div class="panel"><h3>Work organiser</h3><input id="entry" placeholder="Shift or task"><button class="action" onclick="add('work')">ADD TASK</button></div><div id="list"></div>`,
+projects:`<h2>PROJECTS</h2><div class="panel"><h3>Project manager</h3><input id="entry" placeholder="Project name"><button class="action" onclick="add('projects')">ADD PROJECT</button></div><div id="list"></div>`,
+ai:`<h2>CART3R AI</h2><div class="panel"><h3>AI ASSISTANT</h3><p>AI connection coming soon.</p><textarea placeholder="What do you need help with?"></textarea></div>`
+};
+let data=JSON.parse(localStorage.getItem('cart3r')||'{}');
+function show(page,button){
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+button.classList.add('active');
+content.innerHTML=sections[page];
+render(page);
+}
+function add(page){
+let field=document.getElementById('entry');
+if(!field.value.trim())return;
+data[page]=data[page]||[];
+data[page].push(field.value.trim());
+localStorage.setItem('cart3r',JSON.stringify(data));
+field.value='';
+render(page);
+}
+function render(page){
+let list=document.getElementById('list');
+if(!list)return;
+list.innerHTML=(data[page]||[]).map(x=>'<div class="item">'+escapeText(x)+'</div>').join('');
+}
+function escapeText(s){
+let d=document.createElement('div');d.textContent=s;return d.innerHTML;
+}
+show('home',document.querySelector('nav button'));
+</script>
+</body>
+</html>
