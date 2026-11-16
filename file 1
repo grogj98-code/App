@@ -1,0 +1,12 @@
+CART3R-LIFE-OS/
+├── settings.gradle.kts
+├── build.gradle.kts
+├── gradle.properties
+├── app/
+│   ├── build.gradle.kts
+│   └── src/main/
+│       ├── AndroidManifest.xml
+│       └── java/com/carter/lifeos/
+│           └── MainActivity.kt
+└── .github/workflows/
+    └── build-apk.yml
